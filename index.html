@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>URJA PRAVAAH</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+
+<!-- ========== FIREBASE ========== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  // 🔥 Your Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyClf9m5YG6VZlxXNuR3n95zyrGPVo2mguY",
+    authDomain: "urja-pravaah-live.firebaseapp.com",
+    databaseURL: "https://urja-pravaah-live-default-rtdb.firebaseio.com",
+    projectId: "urja-pravaah-live",
+    storageBucket: "urja-pravaah-live.firebasestorage.app",
+    messagingSenderId: "683310146771",
+    appId: "1:683310146771:web:809e9b85d37b8dc69ea026",
+    measurementId: "G-YYJV5D1911"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  console.log("Firebase connected");
+
+  // LIVE READINGS
+  const solarRef = ref(db, "solar");
+  const windRef  = ref(db, "wind");
+  const piezoRef = ref(db, "piezo");
+
+  onValue(solarRef, snap => document.getElementById("solarValue").textContent = snap.val() + " W");
+  onValue(windRef,  snap => document.getElementById("windValue").textContent  = snap.val() + " W");
+  onValue(piezoRef, snap => document.getElementById("footValue").textContent  = snap.val() + " W");
+</script>
+
+</head>
+
+<body>
+
+<header class="header">
+  <h1 class="title">⚡ URJA PRAVAAH</h1>
+  <h2 class="subtitle">GramGrid Dashboard</h2>
+
+  <nav class="nav">
+    <button class="nav-btn" data-section="dashboard">Live Dashboard</button>
+    <button class="nav-btn" data-section="alerts">Alerts</button>
+    <button class="nav-btn" data-section="complaint">Complaint</button>
+    <button id="langBtn" class="nav-btn">Translate 🇮🇳</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ========== DASHBOARD PAGE ========== -->
+<section id="dashboard" class="page active">
+  <h2 id="dashTitle">Live Energy Dashboard</h2>
+  
+  <div class="card-container">
+
+    <div class="card" onclick="showDetails('solarDetails')">
+      <div class="icon">☀</div>
+      <h3 id="solarValue">-- W</h3>
+      <p id="solarText">Solar Power (W)</p>
+    </div>
+
+    <div class="card" onclick="showDetails('windDetails')">
+      <div class="icon">💨</div>
+      <h3 id="windValue">-- W</h3>
+      <p id="windText">Wind Power (W)</p>
+    </div>
+
+    <div class="card" onclick="showDetails('piezoDetails')">
+      <div class="icon">👣</div>
+      <h3 id="footValue">-- W</h3>
+      <p id="footText">Piezo Energy (W)</p>
+    </div>
+
+  </div>
+
+  <!-- DETAILS SECTIONS -->
+  <div id="solarDetails" class="details-box">
+    <h3>Solar Energy Details</h3>
+    <p><strong>Current Output:</strong> <span id="solarValue">-- W</span></p>
+  </div>
+
+  <div id="windDetails" class="details-box">
+    <h3>Wind Energy Details</h3>
+    <p><strong>Current Output:</strong> <span id="windValue">-- W</span></p>
+  </div>
+
+  <div id="piezoDetails" class="details-box">
+    <h3>Piezo Energy Details</h3>
+    <p><strong>Current Output:</strong> <span id="footValue">-- W</span></p>
+  </div>
+
+  <!-- ALERT -->
+  <div class="alert-card dashboard-alert">
+      <div class="icon">🚨</div>
+      <h3 id="piezoActivation">Piezo Activated</h3>
+      <p id="piezoActivationReason">Due to Low Solar & Wind Power</p>
+  </div>
+
+</section>
+
+
+<!-- ========== ALERTS PAGE ========== -->
+<section id="alerts" class="page">
+  <h2 id="alertsTitle">System Alerts</h2>
+
+  <div class="alert-options">
+    <button class="alert-btn" id="alertSolar">Surface Dust Detected (Solar)</button>
+    <button class="alert-btn" id="alertWind">Low Wind Speed (Wind)</button>
+    <button class="alert-btn" id="alertPiezo">Tile Health Alert (Piezo)</button>
+  </div>
+
+  <h3 id="logsTitle">Alert Logs</h3>
+  <div id="alertLogs"></div>
+</section>
+
+
+<!-- ========== COMPLAINT PAGE ========== -->
+<section id="complaint" class="page">
+  <h2 id="complaintTitle">Register a Complaint</h2>
+
+  <form id="complaintForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <textarea id="message" placeholder="Describe your issue..." required></textarea>
+    <button id="submitBtn">Submit</button>
+  </form>
+
+  <p id="complaintMsg"></p>
+</section>
+
+</main>
+
+<!-- POPUP -->
+<div id="popup" class="popup">
+  <p id="popupMsg"></p>
+  <button id="popupClose">Close</button>
+</div>
+
+<!-- Your JS (as module) -->
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
